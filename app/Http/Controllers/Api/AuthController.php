@@ -31,4 +31,30 @@ class AuthController extends Controller
             'data' => $data
         ];
     }
+
+    public function login(Request $request){
+        $validatedData = $request->validate([
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+
+
+        if(!auth()->attempt($validatedData)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid Credentials, please try again'
+            ], 401);
+        }
+
+        $access_token = auth()->user()->createToken('access_token')->accessToken;
+
+        $data = auth()->user();
+        $data['access_token'] = $access_token;
+
+        return [
+            'success' => true,
+            'message' => 'Login Successfully',
+            'data' => $data
+        ];
+    }
 }
