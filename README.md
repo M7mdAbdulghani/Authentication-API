@@ -1,3 +1,6 @@
+## Authentication API
+
+
 This is authentication API project using Laravel framework and includes all APIs related to how to authenticate users like login and register. 
 
 
