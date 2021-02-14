@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -56,5 +57,40 @@ class AuthController extends Controller
             'message' => 'Login Successfully',
             'data' => $data
         ];
+    }
+
+    public function updatePassword(Request $request){
+        $validatedData = $request->validate([
+            'password' => 'required',
+            'new_password' => 'required|confirmed',
+            'new_password_confirmation' => 'required'
+        ]);
+
+        $user = auth()->user();
+
+        if(!Hash::check($validatedData['password'], $user->password)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid password, please try again'
+            ], 404);
+        }
+
+        $user->password = bcrypt($validatedData['new_password']);
+
+        if($user->save()){
+            return [
+                'success' => true,
+                'message' => 'Password updated successfully'
+            ];
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Therse is an error, please try again later'
+        ], 500);
+     }
+
+    public function updateProfile(Request $request){
+
     }
 }
