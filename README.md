@@ -14,7 +14,7 @@ The available routes are
 
 3- Update Profile 
 
-4- Update User
+4- Update User Password
 
 
 
