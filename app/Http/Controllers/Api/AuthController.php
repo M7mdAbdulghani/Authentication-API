@@ -91,6 +91,22 @@ class AuthController extends Controller
      }
 
     public function updateProfile(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:users,email,'.auth()->id()
+        ]);
 
+        if(auth()->user()->update($validatedData)){
+            return [
+                'success' => true,
+                'message' => 'Updated Successfully',
+                'data' => auth()->user()
+            ];
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'There is a problem, please try again later'
+        ], 500);
     }
 }
